@@ -29,11 +29,10 @@ defmodule CredoSpellchecker.DictionaryServer do
   end
 
   defp ensure_started(params) do
-    __MODULE__
-    |> Process.whereis()
-    |> case do
-      nil -> start_link(params)
-      pid -> {:ok, pid}
+    case start_link(params) do
+      {:ok, pid} -> {:ok, pid}
+      {:error, {:already_started, pid}} -> {:ok, pid}
+      result -> result
     end
   end
 end
